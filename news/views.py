@@ -5,6 +5,7 @@ from db.session import database
 from sqlalchemy import select, text
 from .models import news, comment
 from users.models import users
+from fastapi import FastAPI, Request
 
 
 async def create_news(item: schemas.NewsCreate):
@@ -15,11 +16,10 @@ async def create_news(item: schemas.NewsCreate):
 
 
 # переработать эту функцию для присваивания id пользователя
-async def add_post_comment(item: schemas.CommentCreate, news_id: int):
-    comm = comment.insert().values(**item.dict(), news_id=news_id)
+async def add_post_comment(item: schemas.CommentCreate, news_id: int, author_id: int):
+    comm = comment.insert().values(**item.dict(), news_id=news_id, author_id=author_id)
     comm_pk = await database.execute(comm)
-    return {**item.dict(), 'id': comm_pk, "news_id": {"id": news_id}}
-
+    return {**item.dict(), 'id': comm_pk, "news_id": {"id": news_id}, "author_id": {"id": author_id}}
 
 
 async def delete_news(pk: int):

@@ -9,6 +9,16 @@ from db.session import database
 from sqlalchemy import select, text
 
 
+def get_by_email(email: str):
+    u = users.alias('user')
+    q = select([u]).where(u.email == email)
+    user = database.fetch_one(q)
+    if user is not None:
+        user = dict(user)
+        return {**user}
+    return None
+
+
 async def get_all_users():
     u = users.alias('user')
     q = select([u])
@@ -37,3 +47,12 @@ async def create_user(item: UserCreate):
     user_pk = await database.execute(query=users.insert(), values=user_create)
 
     return {**item.dict(), 'id': user_pk}
+
+
+async def authenticate(email: str, password: str):
+    user = get_by_email(email=email)
+    if not user:
+        return None
+    if not verify_password(password, user.hashed_password):
+        return None
+    return user

@@ -3,6 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from news import schemas, models, views
+from fastapi import FastAPI, Request
+
 
 router = APIRouter()
 
@@ -23,8 +25,8 @@ async def delete_news(news_id: int):
 
 
 @router.post('/{news_id}/add_comment/', status_code=201, response_model=schemas.CommentCreate)
-async def create_comment(item: schemas.CommentCreate, news_id: int):
-    return await views.add_post_comment(item=item, news_id=news_id)
+async def create_comment(item: schemas.CommentCreate, news_id: int, author_id: int):
+    return await views.add_post_comment(item=item, news_id=news_id, author_id=author_id)
 
 
 @router.get('/{news_id}/view_comment/', response_model=List[schemas.CommentGet])

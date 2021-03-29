@@ -50,5 +50,5 @@ class NewsUpdate(NewsBase):
 class CommentCreate(CommentBase):
     pass
     # news_id: int
-    author: UserComment
+    # author: UserComment
 

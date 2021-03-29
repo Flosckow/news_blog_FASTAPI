@@ -30,3 +30,5 @@ class UserComment(UserBase):
     pass
 
 
+class UserLogin(UserBase):
+    hashed_password: str
