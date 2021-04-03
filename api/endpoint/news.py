@@ -31,4 +31,14 @@ async def create_comment(item: schemas.CommentCreate, news_id: int, author_id: i
 
 @router.get('/{news_id}/view_comment/', response_model=List[schemas.CommentGet])
 async def get_all_comment(news_id: int):
-    return await views.get_all_cooment_for_news(news_id)
+    return await views.get_all_comment_for_news(news_id)
+
+
+@router.get('/one_news/{news_id}/', response_model=schemas.NewsGet)
+async def get_one_news(news_id: int):
+    return await views.get_one_news(news_id)
+
+
+# @router.get("/author/comment/", response_model=schemas.UserComment)
+# async def comment_author():
+#     return await views.get_comment_author()

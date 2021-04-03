@@ -9,7 +9,8 @@ from datetime import datetime
 class CommentBase(BaseModel):
     body_c: str
 
-    # author: UserComment
+    name: str
+    email: str
 
     class Config:
         orm_mode = True

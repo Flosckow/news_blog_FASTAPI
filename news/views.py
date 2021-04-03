@@ -1,11 +1,9 @@
-from pprint import pprint
-
 from . import schemas
 from db.session import database
-from sqlalchemy import select, text
+from sqlalchemy import select
 from .models import news, comment
 from users.models import users
-from fastapi import FastAPI, Request
+from fastapi import HTTPException
 
 
 async def create_news(item: schemas.NewsCreate):
@@ -15,7 +13,6 @@ async def create_news(item: schemas.NewsCreate):
     return {**item.dict(), 'id': news_pk}
 
 
-# переработать эту функцию для присваивания id пользователя
 async def add_post_comment(item: schemas.CommentCreate, news_id: int, author_id: int):
     comm = comment.insert().values(**item.dict(), news_id=news_id, author_id=author_id)
     comm_pk = await database.execute(comm)
@@ -47,3 +44,14 @@ async def get_all_comment_for_news(pk: int):
 
     return on_lst
 
+
+async def get_one_news(pk: int):
+    n = news.alias('news')
+    q = select([n]).where(news.c.id == pk)
+    news_one = await database.fetch_one(q)
+    if not news_one:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return dict(news_one)
+
+
+# async def create_review(item:schemas)

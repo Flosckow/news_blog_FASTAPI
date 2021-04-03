@@ -25,3 +25,5 @@ async def user_create(item: schemas.UserCreate):
 @router.post("/authenticate/user/", status_code=201, response_model=schemas.UserLogin)
 async def user_login(item: schemas.UserLogin):
     return await service.authenticate(email=item.email, password=item.hashed_password)
+
+
