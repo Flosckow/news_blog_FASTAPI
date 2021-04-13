@@ -53,3 +53,22 @@ class CommentCreate(CommentBase):
     # news_id: int
     # author: UserComment
 
+
+class ReviewBase(BaseModel):
+    body_r: str
+    date: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class CreateReview(ReviewBase):
+    pass
+
+
+class GetReview(ReviewBase):
+    id: int
+
+
+class DeleteReview(ReviewBase):
+    id: int

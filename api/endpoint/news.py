@@ -42,3 +42,18 @@ async def get_one_news(news_id: int):
 # @router.get("/author/comment/", response_model=schemas.UserComment)
 # async def comment_author():
 #     return await views.get_comment_author()
+
+@router.post("/add/review/", response_model=schemas.CreateReview, status_code=201)
+async def create_review(item: schemas.CreateReview, comment_id: int, author_id: int):
+    return await views.create_review(item=item, comment_id=comment_id, author_id=author_id)
+
+
+# сделать количество выводимых постов, например 50, с последующей подгрузкой
+@router.get("/all/reviews/{comment_id}/", response_model=List[schemas.GetReview])
+async def get_all_review_comment(comment_id: int):
+    return await views.get_review_for_comment(comment_id)
+
+
+@router.delete("/delete/review/{review_id}")
+async def delete_review(review_id: int):
+    return await views.delete_review(review_id)

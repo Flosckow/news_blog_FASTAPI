@@ -1,7 +1,7 @@
 from . import schemas
 from db.session import database
 from sqlalchemy import select
-from .models import news, comment
+from .models import news, comment, review
 from users.models import users
 from fastapi import HTTPException
 
@@ -54,4 +54,24 @@ async def get_one_news(pk: int):
     return dict(news_one)
 
 
-# async def create_review(item:schemas)
+# изменить передаваемые параметры коммента и автора, должны передаваться динамически
+async def create_review(item: schemas.CreateReview, comment_id: int, author_id: int):
+    reviews = review.insert().values(**item.dict(), comment_id=comment_id, author_id=author_id)
+    reviews_pk = await database.execute(reviews)
+    return {**item.dict(), 'id': reviews_pk, comment_id: {"id": comment_id}, "author_id": {"id": author_id}}
+
+
+async def get_review_for_comment(pk: int):
+    q = select([review.join(comment).join(users)]).where(comment.c.id == pk)
+    reviews_list = await database.fetch_all(q)
+
+    on_lst = [dict(rev) for rev in reviews_list]
+
+    return on_lst
+
+
+async def delete_review(pk : int):
+    reviews = review.delete().where(review.c.id == pk)
+    return await database.execute(reviews)
+
+
